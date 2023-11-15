@@ -11,7 +11,12 @@ POSSIBLE_RESULTS: Final[tuple[str]] = ("true", "false")
 app = Flask(__name__)
 
 
-@app.route("/cadastre", methods=["GET", ])
+@app.route(
+    "/cadastre",
+    methods=[
+        "GET",
+    ],
+)
 def emulator():
     sleep_duration = randint(0, 3)
     response = {"result": choice(POSSIBLE_RESULTS)}

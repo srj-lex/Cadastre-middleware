@@ -1,0 +1,210 @@
+openapi: 3.0.0
+info:
+  description: API documentation
+  version: 1.0.0
+  title: Cadastre API
+servers:
+  - url: /
+    description: Dev Server
+paths:
+  /ping:
+    get:
+      summary: checks that the server has started
+      responses:
+        "200":
+          description: online
+        "default":
+          description: server is offline
+                
+  /query:
+    get:
+      summary: receiving a request with the parameters of cadastral number, longitude and latitude
+      parameters: 
+        - name: cadastre_number
+          in: query
+          required: True
+          schema:
+            type: integer
+            example: 123
+        - name: longitude
+          in: query
+          required: True
+          schema:
+            type: number
+            example: 45.4
+        - name: latitude
+          in: query
+          required: True
+          schema:
+            type: number
+            example: 85.6
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/id"
+        "400":
+          description: params error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/err_response"
+        "default":
+          description: another status codes
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error"
+                
+  /result:
+    get:
+      summary: get the result by id
+      parameters: 
+        - name: id
+          in: query
+          required: True
+          schema:
+            type: string
+            example: 550e8400-e29b-41d4-a716-446655440000
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/result"
+        "400":
+          description: params error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/err_response"
+        "default":
+          description: another status codes
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error"
+                
+  /history:
+    get:
+      summary: get query history
+      parameters: 
+        - name: cadastre_number
+          in: query
+          required: False
+          schema:
+            type: integer
+            example: 550
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/array_of_results"
+        "400":
+          description: params error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/err_response"
+        "404":
+          description: not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/empty_result"
+        "default":
+          description: another status codes
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error"
+
+  /admin:
+    get:
+      tags:
+        - other
+      summary: admin panel
+      responses:
+        "200":
+          description: ok
+        "default":
+          description: another status codes
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error"
+          
+  /swagger:
+    get:
+      tags:
+        - other
+      summary: API specification
+      responses:
+        "200":
+          description: ok
+        "default":
+          description: another status codes
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error"
+
+components:
+  schemas:
+    id:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 550e8400-e29b-41d4-a716-446655440000
+          
+    result:
+      type: object
+      properties:
+        cadastre_number:
+          type: integer
+          example: 123
+        longitude:
+          type: number
+          example: 48.1
+        latitude:
+          type: number
+          example: 85.4
+        result:
+          type: boolean
+          example: true
+          
+    array_of_results:
+      type: array
+      items:
+        $ref: "#/components/schemas/result"
+
+    err_response:
+      type: object
+      properties:
+        err:
+          type: string
+          example: invalid params, please, try again
+
+    empty_result:
+      type: object
+      properties:
+        err:
+          type: string
+          example: cadastre number is not found
+        
+    error:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 500
+        message:
+          type: string
+          example: server error
+        

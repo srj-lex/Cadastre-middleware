@@ -9,9 +9,10 @@ services:
     env_file: .env
     volumes:
       - pg_data:/var/lib/postgresql/data
-    ports:
-      - 5432:5432
   ext_server:
     build: external_server_emulator/
+  cadastre_server:
+    build: cadastre_middleware/
+    env_file: .env
     ports:
-      - 5050:5050
+      - 5000:5000

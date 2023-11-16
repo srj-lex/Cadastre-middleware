@@ -39,7 +39,7 @@ paths:
             type: number
             example: 85.6
       responses:
-        "200":
+        "201":
           description: ok
           content:
             application/json:

@@ -29,7 +29,7 @@ PORT: Final[int] = os.getenv("DB_PORT", 5432)
 
 URL_OF_CAD_SERV: Final[
     str
-] = "ext_server:5050/cadastre"
+] = "http://ext_server:5050/cadastre"
 ERR_RESPONSE: Final[dict] = {"err": "invalid params, please, try again"}
 EMPTY_RESULT: Final[dict] = {"err": "cadastre number is not found"}
 

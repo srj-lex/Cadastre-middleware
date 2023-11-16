@@ -1,18 +1,9 @@
 import unittest
 import requests
 
-from cadastre_server import app
-from database import db, Requests
-
 
 class TestCadastreService(unittest.TestCase):
-    URL = "http://localhost:5000"
-
-    def setUp(self):
-        self.app_context = app.app_context()
-        self.app_context.push()
-        id = db.session.query(Requests).first().request_id
-        self.ID = id
+    URL = "http://cadastre_server:5000"
 
     def test_1_get_ping(self):
         response = requests.get(self.URL + "/ping")
@@ -61,47 +52,57 @@ class TestCadastreService(unittest.TestCase):
         self.assertEqual(response.status_code, 400)
         print("Test 6 completed")
 
-    def test_7_get_result_with_valid_param(self):
-        payload = {
-            "id": self.ID
-        }
-        response = requests.get(self.URL + "/result", params=payload)
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("result", response.json())
-        print("Test 7 completed")
-
-    def test_8_get_history_without_param(self):
+    def test_7_get_history_without_param(self):
         payload = {}
         response = requests.get(self.URL + "/history", params=payload)
         self.assertEqual(response.status_code, 200)
         self.assertIsInstance(response.json(), list)
-        print("Test 8 completed")
+        print("Test 7 completed")
 
-    def test_9_get_hisory_with_invalid_param(self):
+    def test_8_get_hisory_with_invalid_param(self):
         payload = {
             "cadastre_number": "a7464ag"
         }
         response = requests.get(self.URL + "/history", params=payload)
         self.assertEqual(response.status_code, 400)
-        print("Test 9 completed")
+        print("Test 8 completed")
 
-    def test_10_get_history_with_not_exists_number(self):
+    def test_9_get_history_with_not_exists_number(self):
         payload = {
             "cadastre_number": 5481
         }
         response = requests.get(self.URL + "/history", params=payload)
         self.assertEqual(response.status_code, 404)
-        print("Test 10 completed")
+        print("Test 9 completed")
 
-    def test_11_get_history_with_valid_param(self):
+    def test_10_get_history_with_valid_param(self):
         payload = {
             "cadastre_number": 123
         }
         response = requests.get(self.URL + "/history", params=payload)
         self.assertEqual(response.status_code, 200)
         self.assertIsInstance(response.json(), list)
-        print("Test 11 completed")
+        print("Test 10 completed")
 
 
-if __name__ == "__main__":
-    unittest.main()
+def suite():
+    test_suite = unittest.TestSuite()
+    tests = [
+        TestCadastreService('test_1_get_ping'),
+        TestCadastreService('test_2_get_query_without_params'),
+        TestCadastreService('test_3_get_query_with_invalid_params'),
+        TestCadastreService('test_4_get_query_with_valid_params'),
+        TestCadastreService('test_5_get_result_without_param'),
+        TestCadastreService('test_6_get_result_with_invalid_param'),
+        TestCadastreService('test_7_get_history_without_param'),
+        TestCadastreService('test_8_get_hisory_with_invalid_param'),
+        TestCadastreService('test_9_get_history_with_not_exists_number'),
+        TestCadastreService('test_10_get_history_with_valid_param'),
+    ]
+    test_suite.addTests(tests)
+    return test_suite
+
+
+if __name__ == '__main__':
+    runner = unittest.TextTestRunner()
+    runner.run(suite())

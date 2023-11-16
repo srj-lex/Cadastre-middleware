@@ -18,7 +18,7 @@ app = Flask(__name__)
     ],
 )
 def emulator():
-    sleep_duration = randint(0, 3)
+    sleep_duration = randint(0, 60)
     response = {"result": choice(POSSIBLE_RESULTS)}
     sleep(sleep_duration)
     return (response, 200)

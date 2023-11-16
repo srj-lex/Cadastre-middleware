@@ -9,6 +9,11 @@ services:
     env_file: .env
     volumes:
       - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready -U postgre_user -d postgre
+      interval: 10s
+      timeout: 3s
+      retries: 3
   ext_server:
     build: external_server_emulator/
   cadastre_server:
@@ -16,3 +21,16 @@ services:
     env_file: .env
     ports:
       - 5000:5000
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+  tests:
+    build: tests/
+    depends_on:
+      cadastre_server:
+        condition: service_healthy

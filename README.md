@@ -17,11 +17,11 @@
 Клонировать репозиторий:
 
 ```
-git clone git@github.com:srj-lex/antipov39.git
+git clone git@github.com:srj-lex/Cadastre-middleware.git
 ```
 Перейти в директорию с проекта:
 ```
-cd antipov39
+cd Cadastre-middleware
 ```
 Переименовать .env_example в .env, при необходимости, внести изменения.
 
